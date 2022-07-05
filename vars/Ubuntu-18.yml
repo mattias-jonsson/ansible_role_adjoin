@@ -1,0 +1,20 @@
+---
+
+ansible_role_adjoin_packages:
+  - adcli
+  - libnss-sss
+  - libpam-sss
+  - oddjob
+  - oddjob-mkhomedir
+  - packagekit
+  - python3-pip
+  - realmd
+  - samba-common-bin
+  - sssd
+  - sssd-tools
+
+ansible_role_adjoin_default_sssd_services:
+  - nss
+  - pam
+
+ansible_role_adjoin_realmbin_path: /usr/sbin/realm
