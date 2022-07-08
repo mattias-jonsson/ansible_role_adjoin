@@ -9,6 +9,7 @@ services = {{ ansible_role_adjoin_sssd_services | join(', ') | default(ansible_r
 ad_domain = {{ ansible_role_adjoin_domain }}
 access_provider = ad
 ad_access_filter = {% if ansible_role_adjoin_ad_access_filter is defined and ansible_role_adjoin_ad_access_filter | length %}{{ ansible_role_adjoin_ad_access_filter }}{% endif %}
+
 ad_gpo_access_control = {{ ansible_role_adjoin_gpo_access_control | lower }}  
 ad_gpo_ignore_unreadable = True
 ad_hostname = {{ inventory_hostname | lower }}
