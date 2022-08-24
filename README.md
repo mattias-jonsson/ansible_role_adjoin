@@ -122,7 +122,7 @@ Joins the system to the test.domain.com domain and also loads SSH keys from the 
         - ssh
 
       roles:
-         - role: ansible_role_adjoin
+        - ansible_role_adjoin
 
 License
 -------
