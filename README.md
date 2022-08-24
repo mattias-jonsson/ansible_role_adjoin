@@ -1,7 +1,7 @@
 Ansible Role: ansible_role_adjoin
 =========
 
-An ansible role that joins supported Linux systems Active Directory. The role will modify krb5.conf, realmd.conf smb.conf, sssd.conf and any file in /etc/sssd/conf.d, /etc/krb5.conf.d. Any modifications will result in a backup of original file.
+Ansible role that joins supported Linux systems to an Active Directory. The role will modify krb5.conf, realmd.conf smb.conf, sssd.conf and any file in /etc/sssd/conf.d, /etc/krb5.conf.d. Any modifications will result in a backup of original file.
 This role supports the following Linux distributions:
 
 <ul>
@@ -15,7 +15,7 @@ Requirements
 ------------
 
 Ansible:
-This role has no dependencies on Ansible collections besides what is included in Ansible Core.
+This role has no dependencies on Ansible collections outside of Ansible Core.
 
 Python:
 pexpect >= 3.3 is needed for ansible.builtin.expect which is used during domain join process.
@@ -24,11 +24,11 @@ pexpect >= 3.3 is needed for ansible.builtin.expect which is used during domain 
 Role Variables
 --------------
 
-Available variables are listed below, along with default values where applicable (see defaults/main.yml):
+Available variables are listed below, along with default values where applicable (see `defaults/main.yml`):
 
     ansible_role_adjoin_ad_access_filter:
 
-Access filter as per sssd-ad manpage, e.g. "DOM:test.domain.com:(memberOf:1.2.840.113556.1.4.1941:=CN=some_nested_group,OU=groups,OU=testing,DC=test,DC=domain,DC=com)" would allow access from anyone members/nested groups listed in the some_nested_group group, make note of that nested groups need the OID for LDAP_MATCHING_RULE_IN_CHAIN specified, as done through 1.2.840.113556.1.4.1941 in the above example. For a regular non group without support for nesting one could simply specify the following: test.domain.com:(memberOf=CN=some_group,OU=groups,OU=testing,DC=test,DC=domain,DC=com).
+Access filter as per sssd-ad manpage, e.g. `DOM:test.domain.com:(memberOf:1.2.840.113556.1.4.1941:=CN=some_nested_group,OU=groups,OU=testing,DC=test,DC=domain,DC=com)` would allow access from anyone members/nested groups listed in the some_nested_group group, make note of that nested groups need the OID for LDAP_MATCHING_RULE_IN_CHAIN specified, as done through 1.2.840.113556.1.4.1941 in the above example. For a regular non group without support for nesting one could simply specify the following: `test.domain.com:(memberOf=CN=some_group,OU=groups,OU=testing,DC=test,DC=domain,DC=com)`.
 
 
     ansible_role_adjoin_cleanup: true
@@ -41,11 +41,11 @@ The full path to the OU where the computer account should be created.
 
     ansible_role_adjoin_domain:
 
-Name of the AD domain to join.
+Name of the Active Directory domain that will be joined.
 
     ansible_role_adjoin_gpo_access_control: permissive
 
-Configures SSSD GPO-based accesscontrol. Default is permissive, which specifies that GPO-based access control is evaulated but not enforced. Valied values are permissive, enforcing and disabled.
+Configures SSSD GPO-based accesscontrol. Default is permissive, which specifies that GPO-based access control is evaulated but not enforced. Valied values are `permissive`, `enforcing` and `disabled`.
 
     ansible_role_adjoin_hostname:
 
@@ -77,7 +77,7 @@ Lifetime of the kerberos ticket.
 
     ansible_role_adjoin_homedir_path: /home/%f
 
-Path to the homedir of the user, default is /home/%f which would result in /home/<username>@test.domain.com in the test.domain.com domain.
+Path to the homedir of the user, default is `/home/%f` which would result in /home/<username>@test.domain.com in the test.domain.com domain.
 
     ansible_role_adjoin_override_homedir: true
 
@@ -85,7 +85,7 @@ Override the path to the homedir supplied by the Active directory, default is tr
 
     ansible_role_adjoin_ldap_user_extra_attrs: []
 
-List of LDAP attributes that SSSD would fetch along with the usual set of user attributes, ex altSecurityIdentities:altSecurityIdentities if one would like to load SSH keys etc from altSecurityIdentities.
+List of LDAP attributes that SSSD would fetch along with the usual set of user attributes, ex `altSecurityIdentities:altSecurityIdentities` if one would like to load SSH keys etc from altSecurityIdentities.
 
     ansible_role_adjoin_ldap_user_ssh_public_key:
 
