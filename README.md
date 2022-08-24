@@ -94,7 +94,7 @@ The LDAP attribute that contains the user's SSH public keys
 Dependencies
 ------------
 
-This role depends on `https://github.com/mattias-jonsson/ansible_role_epel`
+This role depends on https://github.com/mattias-jonsson/ansible_role_epel
 
 Example Playbook
 ----------------
