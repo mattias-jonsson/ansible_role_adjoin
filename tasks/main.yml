@@ -1,0 +1,20 @@
+---
+
+- name: Assert some variables and ansible os family
+  assert:
+    that:
+      - ansible_role_adjoin_domain is defined and ansible_role_adjoin_domain | length
+      - ansible_role_adjoin_kdc is defined and ansible_role_adjoin_kdc | length
+      - ansible_role_adjoin_join_user is defined and ansible_role_adjoin_join_user | length
+      - ansible_role_adjoin_join_password is defined and ansible_role_adjoin_join_password | length
+#      - ansible_role_adjoin_ad_access_filter is defined and ansible_role_adjoin_ad_access_filter | length
+#      - ansible_role_adjoin_computer_ou is defined and ansible_role_adjoin_computer_ou | length
+    msg: "mandatory variables are missing or not defined."
+
+- name: Include variables specific for the distribution.
+  include_vars: "{{ item }}"
+  with_items:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+
+- import_tasks: install.yml
+- import_tasks: configure.yml

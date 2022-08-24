@@ -1,0 +1,27 @@
+---
+
+dependencies:
+  - src: https://github.com/mattias-jonsson/ansible_role_epel
+    scm: git
+    version: main
+    name: ansible_role_epel
+
+galaxy_info:
+  author: Mattias Jonsson
+  description: Ansible role to handle AD join/configuration on supported distributions.
+  min_ansible_version: 2.9.27
+  role_name: ansible_role_adjoin
+  license: MIT
+  platforms:
+  - name: EL
+    versions:
+    - "7"
+    - "8"
+  - name: Fedora
+    versions:
+    - "34"
+  - name: Ubuntu
+    versions:
+    - bionic
+    - focal
+    - jammy

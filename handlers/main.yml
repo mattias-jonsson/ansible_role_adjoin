@@ -1,0 +1,20 @@
+---
+- name: restart realmd
+  become: True
+  service:
+    daemon_reload: yes
+    name: realmd
+    state: restarted
+
+- name: clear sssd cache
+  become: true
+  shell: sss_cache -E 2>/dev/null
+  register: sss_cache_clean
+  failed_when: sss_cache_clean.rc not in [ 0, 2 ]
+
+- name: restart sssd
+  become: True
+  service:
+    daemon_reload: yes
+    name: sssd
+    state: restarted

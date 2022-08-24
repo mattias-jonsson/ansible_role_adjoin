@@ -1,0 +1,29 @@
+---
+
+ansible_role_adjoin_packages:
+  - adcli 
+  - authconfig
+  - krb5-workstation
+  - oddjob
+  - oddjob-mkhomedir
+  - openldap-clients
+  - policycoreutils-python
+  - python3-pip
+  - realmd
+  - samba-common
+  - samba-common-tools
+  - sssd
+
+ansible_role_adjoin_default_sssd_services:
+  - nss
+  - pam
+
+ansible_role_adjoin_realmbin_path: /usr/sbin/realm
+
+ansible_role_adjoin_blockingproc_list:
+  - \/var\/lib\/dnf
+  - \/var\/lib\/rpm
+  - \/var\/lib\/selinux
+  - \/var\/cache\/dnf
+  - \/var\/lib\/PackageKit
+  - \/var\/lib\/fwupd

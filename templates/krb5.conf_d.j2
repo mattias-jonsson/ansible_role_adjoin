@@ -1,0 +1,39 @@
+# {{ ansible_managed }}
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+  default_realm = {{ ansible_role_adjoin_domain | upper }}
+  dns_canonicalize_hostname = True
+  dns_lookup_kdc = True
+  dns_lookup_realm = True
+
+
+  kdc_timesync = 1
+  forwardable = True
+
+  rdns = False
+  renew_lifetime = {{ ansible_role_adjoin_renew_lifetime }}
+  ticket_lifetime = {{ ansible_role_adjoin_ticket_lifetime }}
+
+{% if ansible_distribution == "CentOS" or ansible_distribution == "Fedora" %}
+  default_ccache_name = KEYRING:persistent:%{uid}
+  pkinit_anchors = /etc/pki/tls/certs/ca-bundle.crt
+{% endif %}
+
+{% if ansible_distribution == "RedHat" %}
+  default_ccache_name = KEYRING:persistent:%{uid}
+{% endif %}
+
+[realms]
+  {{ ansible_role_adjoin_domain | upper }} = {
+    kdc = {{ ansible_role_adjoin_kdc }}
+  }
+
+[domain_realm]
+.{{ ansible_role_adjoin_domain | lower }} = {{ ansible_role_adjoin_domain | upper }}
+{{ ansible_role_adjoin_domain | lower }} = {{ ansible_role_adjoin_domain | upper }}
+
+#[capaths]
