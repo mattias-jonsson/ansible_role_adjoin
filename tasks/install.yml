@@ -22,4 +22,4 @@
   become: True
   ansible.builtin.pip:
     name: pexpect
-    state: latest
+    state: present
