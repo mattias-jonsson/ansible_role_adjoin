@@ -69,7 +69,7 @@
 
     - name: cleanup ssd.conf.d
       become: True
-      ansible.builtin.command: mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S')}}.disabled"
+      ansible.builtin.command: mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}.disabled"
       with_items: "{{ sssd_confd_matched_files.files | map(attribute='path') | list }}"
 
     - name: check if /etc/krb5.conf.d exists
