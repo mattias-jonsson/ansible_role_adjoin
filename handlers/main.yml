@@ -1,7 +1,7 @@
 ---
 - name: restart realmd
   become: True
-  service:
+  systemd:
     daemon_reload: yes
     name: realmd
     state: restarted
@@ -14,7 +14,7 @@
 
 - name: restart sssd
   become: True
-  service:
+  systemd:
     daemon_reload: yes
     name: sssd
     state: restarted
