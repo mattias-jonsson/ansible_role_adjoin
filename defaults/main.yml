@@ -1,7 +1,7 @@
 ---
 
 ansible_role_adjoin_ad_access_filter:
-ansible_role_adjoin_cleanup: True
+ansible_role_adjoin_cleanup: true
 ansible_role_adjoin_computer_ou:
 ansible_role_adjoin_domain:
 ansible_role_adjoin_gpo_access_control: permissive
@@ -12,7 +12,7 @@ ansible_role_adjoin_kdc:
 ansible_role_adjoin_ldap_use_tokengroups: 'False'
 ansible_role_adjoin_ldap_user_extra_attrs: []
 ansible_role_adjoin_ldap_user_ssh_public_key:
-ansible_role_adjoin_override_homedir: True
+ansible_role_adjoin_override_homedir: true
 ansible_role_adjoin_renew_lifetime: 7d
 ansible_role_adjoin_sssd_services:
   - nss

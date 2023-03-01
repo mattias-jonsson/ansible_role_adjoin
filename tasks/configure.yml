@@ -1,135 +1,139 @@
 ---
 
-- name: Set hostname
-  become: True
+- name: Set hostname.
+  become: true
   ansible.builtin.hostname:
     name: "{{ ansible_role_adjoin_hostname }}"
     use: systemd
   when: (ansible_role_adjoin_hostname is defined) and (ansible_role_adjoin_hostname | length > 0)
 
-- name: create krb.conf file from template
+- name: Create krb.conf file from template.
   become: true
   ansible.builtin.template:
     src: "krb5.conf_d.j2"
     dest: /etc/krb5.conf
     owner: root
     group: root
-    mode: 0644
-    backup: yes
-  notify: 
-    - restart sssd
-    - clear sssd cache
+    mode: '0644'
+    backup: true
+  notify:
+    - Restart sssd
+    - Clear sssd cache
 
-- name: join system to Active Directory Domain {{ ansible_role_adjoin_domain | upper }}
-  become: True
+- name: Join system to Active Directory Domain {{ ansible_role_adjoin_domain | upper }}.
+  become: true
   ansible.builtin.expect:
-    command: /bin/bash -c "{{ ansible_role_adjoin_realmbin_path }} join --membership-software=adcli --client-software=sssd --computer-ou={{ ansible_role_adjoin_computer_ou }}  --user={{ ansible_role_adjoin_join_user }} {{ ansible_role_adjoin_domain | upper }} --verbose"
+    command: >
+      /bin/bash -c "{{ ansible_role_adjoin_realmbin_path }}
+      join --membership-software=adcli
+      --client-software=sssd
+      --computer-ou={{ ansible_role_adjoin_computer_ou }}
+      --user={{ ansible_role_adjoin_join_user }} {{ ansible_role_adjoin_domain | upper }}
+      --verbose"
     timeout: 60
     responses:
       Password for .*: "{{ ansible_role_adjoin_join_password }}"
   register: adjoin
   args:
     creates: /etc/krb5.keytab
-  no_log: False
+  no_log: false
 
-- name: install sssd.conf template
+- name: Install sssd.conf template.
   become: true
   ansible.builtin.template:
     src: sssd.conf.j2
     dest: /etc/sssd/sssd.conf
     owner: root
     group: root
-    mode: 0600
-    backup: yes
+    mode: '0600'
+    backup: true
   register: sssd_config
-  notify: restart sssd
+  notify: Restart sssd
 
-- name: install realmd template
-  become: True
+- name: Install realmd template.
+  become: true
   ansible.builtin.template:
     src: realmd.conf.j2
     dest: /etc/realmd.conf
     owner: root
     group: root
-    mode: 0600
-    backup: yes
+    mode: '0600'
+    backup: true
   register: realmd_config
-  notify: restart sssd
+  notify: Restart realmd
 
-- name: run cleanup if enabled
+- name: Run cleanup if enabled.
+  when: ansible_role_adjoin_cleanup | bool
   block:
-    - name: build list of unwanted files in conf.d directories
-      become: True
+    - name: Build list of unwanted files in conf.d directories.
+      become: true
       ansible.builtin.find:
-        path:  /etc/sssd/conf.d
+        path: /etc/sssd/conf.d
         file_type: any
         pattern: .*\.conf$
-        use_regex: yes
+        use_regex: true
       register: sssd_confd_matched_files
 
-    - name: cleanup ssd.conf.d
-      become: True
-      ansible.builtin.command: mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}.disabled"
+    - name: Cleanup of ssd.conf.d.
+      become: true
+      ansible.builtin.command: >
+        mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}.disabled"
       with_items: "{{ sssd_confd_matched_files.files | map(attribute='path') | list }}"
 
-    - name: check if /etc/krb5.conf.d exists
-      stat:
+    - name: Check if /etc/krb5.conf.d exists.
+      ansible.builtin.stat:
         path: "/etc/krb5.conf.d"
       register: krb5conf_dir
       when: ansible_role_adjoin_cleanup | bool
 
 
-    - name: run cleanup if enabled
+    - name: Run cleanup if enabled.
+      when: krb5conf_dir.stat.exists
       block:
-
-        - name: build list of unwanted files in conf.d directories
-          become: True
+        - name: Build list of unwanted files in conf.d directories.
+          become: true
           ansible.builtin.find:
             path: /etc/krb5.conf.d
             file_type: any
             pattern: .*\.conf$
-            use_regex: yes
+            use_regex: true
             excludes:
               - "{{ ansible_role_adjoin_domain | lower }}_krb5.conf"
           register: krb5_confd_matched_files
 
-        - name: cleanup krb5.conf.d
-          become: True
-          command: mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S')}}.disabled"
+        - name: Cleanup of krb5.conf.d.
+          become: true
+          ansible.builtin.command: >
+            mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}.disabled"
           with_items: "{{ krb5_confd_matched_files.files | map(attribute='path') | list }}"
 
-      when: krb5conf_dir.stat.exists
 
-
-  when: ansible_role_adjoin_cleanup | bool
-
-
-- name: install smb template
-  become: True
+- name: Install smb template.
+  become: true
   ansible.builtin.template:
     src: smb.conf.j2
     dest: /etc/samba/smb.conf
     owner: root
     group: root
-    mode: 0644
-    backup: yes
+    mode: '0644'
+    backup: true
   register: smb_config
 
-- name: enable sssd
-  become: True
+- name: Enable sssd.
+  become: true
   ansible.builtin.service:
     name: sssd
-    enabled: yes
+    enabled: true
     state: started
 
-- name: update authconfig
-  become: True
+- name: Update authconfig.
+  become: true
   ansible.builtin.shell: authconfig --update --enablesssd --enablesssdauth --enablemkhomedir
-  notify: restart sssd
+  notify: Restart sssd
   when: ansible_os_family == "RedHat" and (smb_config.changed or sssd_config.changed or sssd_d_config.changed or realmd_config.changed and adjoin.changed)
 
-- name: enable mkhomedir on Ubuntu based distros
-  become: True
+- name: Enable mkhomedir on Ubuntu based distros.
+  become: true
   ansible.builtin.lineinfile:
     path: /etc/pam.d/common-session
     insertafter: ^session\s\+required\s\+pam_unix.so\s\+

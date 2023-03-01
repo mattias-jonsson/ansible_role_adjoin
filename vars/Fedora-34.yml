@@ -1,7 +1,7 @@
 ---
 
 ansible_role_adjoin_packages:
-  - adcli 
+  - adcli
   - authconfig
   - krb5-workstation
   - oddjob

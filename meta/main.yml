@@ -9,19 +9,19 @@ dependencies:
 galaxy_info:
   author: Mattias Jonsson
   description: Ansible role to handle AD join/configuration on supported distributions.
-  min_ansible_version: 2.9.27
+  min_ansible_version: 2.13.0
   role_name: ansible_role_adjoin
   license: MIT
   platforms:
-  - name: EL
-    versions:
-    - "7"
-    - "8"
-  - name: Fedora
-    versions:
-    - "34"
-  - name: Ubuntu
-    versions:
-    - bionic
-    - focal
-    - jammy
+    - name: EL
+      versions:
+        - "7"
+        - "8"
+    - name: Fedora
+      versions:
+        - "34"
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+        - jammy
