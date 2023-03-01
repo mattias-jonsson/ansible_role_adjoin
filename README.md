@@ -26,9 +26,6 @@ Role Variables
 
 Available variables are listed below, along with default values where applicable (see `defaults/main.yml`):
 
-| `ansible_role_vmware_tools_remove_features` | No | [] | A list of features to remove at installation, Please se VMware Tools documentation for list of features. |
-
-
 | Variable | Required | Default | Comments |
 | -------- | -------- | ------- | -------- |
 | `ansible_role_adjoin_ad_access_filter` | No | | Access filter as per sssd-ad manpage, e.g. `DOM:test.domain.com:(memberOf:1.2.840.113556.1.4.1941:=CN=some_nested_group,OU=groups,OU=testing,DC=test,DC=domain,DC=com)` would allow access from anyone members/nested groups listed in the some_nested_group group, make note of that nested groups need the OID for LDAP_MATCHING_RULE_IN_CHAIN specified, as done through 1.2.840.113556.1.4.1941 in the above example. For a regular non group without support for nesting one could simply specify the following: `test.domain.com:(memberOf=CN=some_group,OU=groups,OU=testing,DC=test,DC=domain,DC=com)`. |
