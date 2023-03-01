@@ -72,9 +72,9 @@ Joins the system to the test.domain.com domain and also loads SSH keys from the 
           - altSecurityIdentities:altSecurityIdentities
         ansible_role_adjoin_ldap_user_ssh_public_key: altSecurityIdentities
         ansible_role_adjoin_sssd_services:
-        - nss
-        - pam
-        - ssh
+          - nss
+          - pam
+          - ssh
 
       roles:
         - ansible_role_adjoin
