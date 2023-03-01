@@ -18,7 +18,7 @@ Ansible:
 This role has no dependencies on Ansible collections outside of Ansible Core.
 
 Python:
-pexpect >= 3.3 is needed for ansible.builtin.expect which is used during domain join process.
+pexpect >= 3.3 is needed for `ansible.builtin.expect` which is used during domain join process.
 
 
 Role Variables
